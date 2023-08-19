@@ -1,17 +1,5 @@
-use std::ptr::NonNull;
+use crate::utils::data_ptr::DataPtr;
 
-pub struct Context {
-    ptr: NonNull<std::ffi::c_void>,
-    deleter: fn(NonNull<std::ffi::c_void>),
-}
-
-impl Drop for Context {
-    fn drop(&mut self) {
-        (self.deleter)(self.ptr);
-    }
-}
-
-pub enum UniquePtr<T> {
-    Owned(NonNull<T>),
-    Managed(Context),
+pub trait Allocator {
+    fn allocate(n: usize) -> DataPtr;
 }
