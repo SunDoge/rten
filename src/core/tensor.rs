@@ -101,3 +101,12 @@ where
 //         Self::infer_data_type()
 //     }
 // }
+
+pub enum UntypedTensor {
+    Cpu(UnTypedCpuTensor),
+}
+
+pub enum UnTypedCpuTensor {
+    F32(CpuTensor<f32>),
+    F64(CpuTensor<f64>),
+}
