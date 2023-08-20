@@ -6,9 +6,9 @@ use std::sync::{Arc, RwLock};
 
 use super::{
     cpu_storage::CpuStorage,
-    data_type::{DataType, InferDataType, Zero},
+    data_type::{DataType, Element, InferDataType, Zero},
     device::Device,
-    shape_and_strides::ShapeAndStrides,
+    shape_and_strides::{self, ShapeAndStrides},
     storage::Storage,
 };
 
@@ -61,13 +61,27 @@ pub struct TensorBuilder<'a, T> {
 //     }
 // }
 
-impl<T, S> Tensor<T, S>
+pub trait TensorLike {
+    fn zeros(shape: &[i64]) -> Self;
+    fn ones(shape: &[i64]) -> Self;
+}
+
+impl<T, S> TensorLike for Tensor<T, S>
 where
     S: Storage<Elem = T>,
 {
-    pub fn zeros(shape: &[i64]) -> Self {
+    fn zeros(shape: &[i64]) -> Self {
         let shape_and_strides = ShapeAndStrides::new_contiguous(shape);
         let storage = S::zeros(shape_and_strides.num_elements());
+        Self {
+            storage,
+            shape_and_strides,
+        }
+    }
+
+    fn ones(shape: &[i64]) -> Self {
+        let shape_and_strides = ShapeAndStrides::new_contiguous(shape);
+        let storage = S::ones(shape_and_strides.num_elements());
         Self {
             storage,
             shape_and_strides,
