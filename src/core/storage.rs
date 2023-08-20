@@ -2,8 +2,14 @@ use std::{ptr::NonNull, sync::Arc};
 
 use super::data_type::Zero;
 
-pub struct Storage<T> {
-    data: DataPtr<T>,
+// pub struct Storage<T> {
+//     data: DataPtr<T>,
+// }
+
+pub trait Storage {
+    type Elem;
+
+    fn zeros(size: usize) -> Self;
 }
 
 pub struct RawPointerBuffer<T, A> {
@@ -35,23 +41,23 @@ impl<T> DataPtr<T> {
     }
 }
 
-#[derive(Debug)]
-pub struct CpuStorage<T> {
-    data: Box<[T]>,
-}
+// #[derive(Debug)]
+// pub struct CpuStorage<T> {
+//     data: Box<[T]>,
+// }
 
-impl<T> CpuStorage<T> {
-    pub fn new(data: Box<[T]>) -> Self {
-        Self { data }
-    }
-}
+// impl<T> CpuStorage<T> {
+//     pub fn new(data: Box<[T]>) -> Self {
+//         Self { data }
+//     }
+// }
 
-impl<T> CpuStorage<T>
-where
-    T: Zero + Clone,
-{
-    pub fn zeros(size: usize) -> Self {
-        let data = vec![T::zero(); size].into_boxed_slice();
-        Self { data }
-    }
-}
+// impl<T> CpuStorage<T>
+// where
+//     T: Zero + Clone,
+// {
+//     pub fn zeros(size: usize) -> Self {
+//         let data = vec![T::zero(); size].into_boxed_slice();
+//         Self { data }
+//     }
+// }

@@ -20,7 +20,7 @@ impl InferDataType for f32 {
     }
 }
 
-pub trait Zero: Sized {
+pub trait Zero: Sized + Copy {
     fn zero() -> Self;
 }
 

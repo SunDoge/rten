@@ -1,6 +1,6 @@
-use rten::core::{device::Device, tensor::Tensor};
+use rten::core::tensor::{CpuTensor, Tensor};
 
 fn main() {
-    let x: Tensor<f32> = Tensor::zeros(&[1, 2, 3], Device::CPU);
+    let x: CpuTensor<f32> = Tensor::zeros(&[1, 2, 3]);
     dbg!(x);
 }
