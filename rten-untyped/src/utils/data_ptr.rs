@@ -6,3 +6,9 @@ pub struct DataPtr {
     ptr: UniqueVoidPtr,
     device: Device,
 }
+
+impl DataPtr {
+    pub fn device(&self) -> Device {
+        self.device
+    }
+}

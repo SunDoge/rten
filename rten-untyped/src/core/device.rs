@@ -6,7 +6,7 @@ pub enum DeviceType {
 
 pub type DeviceIndex = i8;
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Device {
     device_type: DeviceType,
     device_index: DeviceIndex,

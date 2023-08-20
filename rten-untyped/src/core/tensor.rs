@@ -1,1 +1,3 @@
-pub struct Tensor {}
+pub struct Tensor {
+    // storage:
+}
