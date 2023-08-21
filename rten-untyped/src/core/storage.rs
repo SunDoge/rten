@@ -1,16 +1,40 @@
-use std::sync::{Arc, RwLock};
+use std::sync::{Arc, Mutex, RwLock};
 
 use crate::utils::data_ptr::DataPtr;
 
-use super::device::{Device, DeviceType};
+use super::allocator::Allocator;
+use super::{
+    cpu_allocator::CpuAllocator,
+    device::{Device, DeviceType},
+};
 
-struct StorageImpl {
+pub struct StorageImpl {
     data_ptr: DataPtr,
+    allocator: Option<Arc<Mutex<dyn Allocator>>>,
+    resizable: bool,
 }
 
 impl StorageImpl {
-    pub fn new(data_ptr: DataPtr) -> Self {
-        Self { data_ptr }
+    pub fn new(
+        data_ptr: DataPtr,
+        allocator: Option<Arc<Mutex<dyn Allocator>>>,
+        resizable: bool,
+    ) -> Self {
+        assert!(resizable && allocator.is_some());
+        Self {
+            data_ptr,
+            allocator,
+            resizable,
+        }
+    }
+
+    pub fn new_with_size(
+        size_bytes: usize,
+        allocator: Arc<Mutex<dyn Allocator>>,
+        resizable: bool,
+    ) -> Self {
+        let data_ptr = allocator.lock().unwrap().allocate(size_bytes);
+        Self::new(data_ptr, Some(allocator), resizable)
     }
 
     pub fn data_ptr(&self) -> &DataPtr {
@@ -33,11 +57,33 @@ impl StorageImpl {
 pub struct Storage(Arc<RwLock<StorageImpl>>);
 
 impl Storage {
-    pub fn new(data_ptr: DataPtr) -> Self {
-        Self(Arc::new(RwLock::new(StorageImpl::new(data_ptr))))
+    pub fn new(ptr: Arc<RwLock<StorageImpl>>) -> Self {
+        Self(ptr)
+    }
+
+    pub fn new_with_size(
+        size_bytes: usize,
+        allocator: Arc<Mutex<dyn Allocator>>,
+        resizable: bool,
+    ) -> Self {
+        let ptr = StorageImpl::new_with_size(size_bytes, allocator, resizable);
+        Self::new(Arc::new(RwLock::new(ptr)))
+    }
+
+    pub fn new_with_data(
+        data_ptr: DataPtr,
+        allocator: Option<Arc<Mutex<dyn Allocator>>>,
+        resizable: bool,
+    ) -> Self {
+        let ptr = StorageImpl::new(data_ptr, allocator, resizable);
+        Self::new(Arc::new(RwLock::new(ptr)))
     }
 
     pub fn is_unique(&self) -> bool {
         Arc::strong_count(&self.0) == 1
+    }
+
+    pub fn device(&self) -> Device {
+        self.0.read().unwrap().device()
     }
 }
