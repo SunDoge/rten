@@ -19,4 +19,16 @@ impl DataPtr {
     pub fn as_ref(&self) -> &[u8] {
         self.ptr.as_ref()
     }
+
+    pub fn as_mut(&mut self) -> &mut [u8] {
+        self.ptr.as_mut()
+    }
+
+    pub fn as_slice<T>(&self) -> &[T] {
+        self.ptr.as_slice()
+    }
+
+    pub fn as_slice_mut<T>(&mut self) -> &mut [T] {
+        self.ptr.as_slice_mut()
+    }
 }

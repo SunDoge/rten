@@ -97,6 +97,10 @@ impl ShapeAndStrides {
     pub fn num_elements(&self) -> usize {
         self.shape().iter().product::<i64>() as usize
     }
+
+    pub fn is_contiguous(&self) -> bool {
+        dlpark::utils::is_contiguous(self.shape(), self.strides())
+    }
 }
 
 impl std::fmt::Debug for ShapeAndStrides {

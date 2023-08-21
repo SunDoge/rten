@@ -1,4 +1,4 @@
-use std::sync::{Arc, Mutex, RwLock};
+use std::sync::{Arc, Mutex, RwLock, RwLockReadGuard, RwLockWriteGuard};
 
 use crate::utils::data_ptr::DataPtr;
 
@@ -52,9 +52,24 @@ impl StorageImpl {
     pub fn device_type(&self) -> DeviceType {
         self.data_ptr.device().device_type()
     }
+
+    pub fn as_slice<T>(&self) -> &[T] {
+        self.data_ptr.as_slice()
+    }
+
+    pub fn as_slice_mut<T>(&mut self) -> &mut [T] {
+        self.data_ptr.as_slice_mut()
+    }
 }
 
-pub struct Storage(Arc<RwLock<StorageImpl>>);
+#[derive(Clone)]
+pub struct Storage(pub Arc<RwLock<StorageImpl>>);
+
+impl From<StorageImpl> for Storage {
+    fn from(value: StorageImpl) -> Self {
+        Self::new(Arc::new(RwLock::new(value)))
+    }
+}
 
 impl Storage {
     pub fn new(ptr: Arc<RwLock<StorageImpl>>) -> Self {
@@ -85,5 +100,13 @@ impl Storage {
 
     pub fn device(&self) -> Device {
         self.0.read().unwrap().device()
+    }
+
+    pub fn read(&self) -> RwLockReadGuard<StorageImpl> {
+        self.0.read().unwrap()
+    }
+
+    pub fn write(&self) -> RwLockWriteGuard<StorageImpl> {
+        self.0.write().unwrap()
     }
 }
