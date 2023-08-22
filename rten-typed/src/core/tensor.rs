@@ -7,12 +7,11 @@ use std::sync::{Arc, RwLock};
 use super::{
     cpu_storage::CpuStorage,
     data_type::{DataType, Element, InferDataType, Zero},
-    device::Device,
-    shape_and_strides::{self, ShapeAndStrides},
     storage::Storage,
 };
 
-pub type Void = std::ffi::c_void;
+use rten_core::device::Device;
+use rten_core::shape_and_strides::ShapeAndStrides;
 
 // impl Tensor<Void> {}
 
