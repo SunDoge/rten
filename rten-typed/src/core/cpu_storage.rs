@@ -1,5 +1,7 @@
 use std::sync::{Arc, RwLock};
 
+use rten_core::device::Device;
+
 use super::{
     data_type::{Element, Zero},
     storage::Storage,
@@ -19,7 +21,7 @@ where
 {
     type Elem = T;
 
-    fn zeros(size: usize) -> Self {
+    fn zeros(size: usize, _device: Device) -> Self {
         let data = vec![T::zero(); size].into_boxed_slice();
         Self(Arc::new(RwLock::new(CpuStorageImpl { data })))
     }

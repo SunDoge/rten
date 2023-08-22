@@ -10,6 +10,9 @@ use super::{
     storage::Storage,
 };
 
+#[cfg(feature = "cuda")]
+use super::cuda_storage::CudaStorage;
+
 use rten_core::device::Device;
 use rten_core::shape_and_strides::ShapeAndStrides;
 
@@ -22,6 +25,9 @@ use rten_core::shape_and_strides::ShapeAndStrides;
 // }
 
 pub type CpuTensor<T> = Tensor<T, CpuStorage<T>>;
+
+#[cfg(feature = "cuda")]
+pub type CudaTensor<T> = Tensor<T, CudaStorage<T>>;
 
 #[derive(Debug)]
 pub struct Tensor<T, S>
@@ -60,25 +66,25 @@ pub struct TensorBuilder<'a, T> {
 //     }
 // }
 
-pub trait TensorLike {
-    fn zeros(shape: &[i64]) -> Self;
-    fn ones(shape: &[i64]) -> Self;
-}
+// pub trait TensorLike {
+//     fn zeros(shape: &[i64]) -> Self;
+//     fn ones(shape: &[i64]) -> Self;
+// }
 
-impl<T, S> TensorLike for Tensor<T, S>
+impl<T, S> Tensor<T, S>
 where
     S: Storage<Elem = T>,
 {
-    fn zeros(shape: &[i64]) -> Self {
+    pub fn zeros(shape: &[i64], device: Device) -> Self {
         let shape_and_strides = ShapeAndStrides::new_contiguous(shape);
-        let storage = S::zeros(shape_and_strides.num_elements());
+        let storage = S::zeros(shape_and_strides.num_elements(), device);
         Self {
             storage,
             shape_and_strides,
         }
     }
 
-    fn ones(shape: &[i64]) -> Self {
+    pub fn ones(shape: &[i64]) -> Self {
         let shape_and_strides = ShapeAndStrides::new_contiguous(shape);
         let storage = S::ones(shape_and_strides.num_elements());
         Self {
@@ -100,6 +106,15 @@ where
 //         Self::infer_data_type()
 //     }
 // }
+
+impl<T, S> Tensor<T, S>
+where
+    S: Storage<Elem = T>,
+{
+    pub fn to_vec(&self) -> Vec<T> {
+        self.storage.to_vec()
+    }
+}
 
 pub enum UntypedTensor {
     Cpu(UnTypedCpuTensor),

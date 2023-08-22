@@ -4,7 +4,13 @@ pub enum DeviceType {
     Cuda,
 }
 
+
 pub type DeviceIndex = i8;
+
+
+
+
+
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Device {
@@ -41,4 +47,6 @@ impl Device {
     }
 
     fn validate(&self) {}
+
+    
 }

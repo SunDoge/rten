@@ -1,5 +1,7 @@
 use std::{ptr::NonNull, sync::Arc};
 
+use rten_core::device::Device;
+
 use super::data_type::{Element, Zero};
 
 // pub struct Storage<T> {
@@ -9,7 +11,7 @@ use super::data_type::{Element, Zero};
 pub trait Storage {
     type Elem: Element;
 
-    fn zeros(size: usize) -> Self;
+    fn zeros(size: usize, device: Device) -> Self;
     fn ones(size: usize) -> Self;
     fn to_vec(&self) -> Vec<Self::Elem>;
 }

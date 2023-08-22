@@ -6,4 +6,11 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+cudarc = { version = "0.9", optional = true }
 rten-core = { path = "../rten-core" }
+
+
+[features]
+default = []
+
+cuda = ["dep:cudarc"]
