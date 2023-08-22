@@ -4,9 +4,10 @@ use crate::utils::data_ptr::DataPtr;
 
 use super::{
     cpu_allocator::CPU_ALLOCATOR,
-    device::Device,
     storage::{Storage, StorageImpl},
 };
+
+use rten_core::device::Device;
 
 pub struct Tensor {
     storage: Storage,

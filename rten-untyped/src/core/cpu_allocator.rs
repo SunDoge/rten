@@ -4,7 +4,8 @@ use once_cell::sync::{Lazy, OnceCell};
 
 use crate::utils::{data_ptr::DataPtr, unique_void_ptr::UniqueVoidPtr};
 
-use super::{allocator::Allocator, device::Device};
+use super::allocator::Allocator;
+use rten_core::device::Device;
 
 pub static CPU_ALLOCATOR: Lazy<Arc<Mutex<dyn Allocator>>> =
     Lazy::new(|| Arc::new(Mutex::new(CpuAllocator {})));

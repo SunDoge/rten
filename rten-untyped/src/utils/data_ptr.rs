@@ -1,4 +1,4 @@
-use crate::core::device::Device;
+use rten_core::device::Device;
 
 use super::unique_void_ptr::UniqueVoidPtr;
 

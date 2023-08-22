@@ -3,10 +3,9 @@ use std::sync::{Arc, Mutex, RwLock, RwLockReadGuard, RwLockWriteGuard};
 use crate::utils::data_ptr::DataPtr;
 
 use super::allocator::Allocator;
-use super::{
-    cpu_allocator::CpuAllocator,
-    device::{Device, DeviceType},
-};
+use super::cpu_allocator::CpuAllocator;
+
+use rten_core::device::{Device, DeviceType};
 
 pub struct StorageImpl {
     data_ptr: DataPtr,
