@@ -35,3 +35,7 @@ where
         self.0.read().unwrap().data.to_vec()
     }
 }
+
+pub struct Cpu {}
+
+

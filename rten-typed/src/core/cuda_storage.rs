@@ -40,3 +40,7 @@ where
         cpu_data
     }
 }
+
+pub struct Cuda {
+    
+}
